@@ -1,9 +1,14 @@
 require('dotenv').config();
 const express = require('express');
 const sql = require('mssql');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  credentials: true
+}));
 
 const dbConfig = {
   user: process.env.DB_USER,
@@ -60,7 +65,28 @@ app.delete('/productos/:id', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+// Endpoint de login seguro
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Faltan credenciales' });
+  }
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query`SELECT * FROM dannyusuarios WHERE username = ${username} AND password = ${password}`;
+    if (result.recordset.length > 0) {
+      // Login válido
+      res.json({ success: true, user: { id: result.recordset[0].id, username: result.recordset[0].username } });
+    } else {
+      // Login inválido
+      res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
+    }
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 }); 
