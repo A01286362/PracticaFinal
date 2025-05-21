@@ -26,7 +26,7 @@ const Login = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        // Aquí podrías guardar el usuario en el estado global o localStorage si lo deseas
+        localStorage.setItem('token', data.token);
         navigate('/dashboard');
       } else {
         const data = await response.json();

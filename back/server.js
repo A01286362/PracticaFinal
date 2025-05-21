@@ -129,6 +129,47 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// Obtener todos los usuarios (protegido)
+app.get('/usuarios', authenticateToken, async (req, res) => {
+  try {
+    await sql.connect(dbConfig);
+    const result = await sql.query('SELECT id, username FROM dannyusuarios');
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// Editar usuario (protegido)
+app.put('/usuarios/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const { username, password } = req.body;
+  try {
+    await sql.connect(dbConfig);
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await sql.query`UPDATE dannyusuarios SET username = ${username}, password = ${hashedPassword} WHERE id = ${id}`;
+    } else {
+      await sql.query`UPDATE dannyusuarios SET username = ${username} WHERE id = ${id}`;
+    }
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// Borrar usuario (protegido)
+app.delete('/usuarios/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    await sql.connect(dbConfig);
+    await sql.query`DELETE FROM dannyusuarios WHERE id = ${id}`;
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
