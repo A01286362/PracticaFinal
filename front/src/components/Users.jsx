@@ -3,6 +3,7 @@ import {
   Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Dialog, DialogActions, DialogContent, DialogTitle, IconButton
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:3001';
 
@@ -17,6 +18,7 @@ const Users = () => {
   const [editUser, setEditUser] = useState(null);
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -95,6 +97,9 @@ const Users = () => {
 
   return (
     <Box>
+      <Button onClick={() => navigate('/dashboard')} variant="outlined" sx={{ mb: 2 }}>
+        ← Dashboard
+      </Button>
       <Typography variant="h4" gutterBottom>Usuarios</Typography>
       <Button variant="contained" color="primary" onClick={() => handleOpen()} sx={{ mb: 2 }}>
         Agregar Usuario

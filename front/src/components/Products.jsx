@@ -3,6 +3,7 @@ import {
   Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField, IconButton
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost:3001';
 
@@ -16,6 +17,7 @@ const Products = () => {
   const [open, setOpen] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [form, setForm] = useState({ nombre: '', descripcion: '', precio: '' });
+  const navigate = useNavigate();
 
   const fetchProducts = async () => {
     setError('');
@@ -92,6 +94,9 @@ const Products = () => {
 
   return (
     <Box>
+      <Button onClick={() => navigate('/dashboard')} variant="outlined" sx={{ mb: 2 }}>
+        ← Dashboard
+      </Button>
       <Typography variant="h4" gutterBottom>Productos</Typography>
       <Button variant="contained" color="primary" onClick={() => handleOpen()} sx={{ mb: 2 }}>
         Agregar Producto
