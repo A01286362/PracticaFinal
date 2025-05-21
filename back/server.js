@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(express.json());
@@ -21,7 +23,21 @@ const dbConfig = {
   }
 };
 
-app.get('/productos', async (req, res) => {
+const JWT_SECRET = process.env.JWT_SECRET || 'secreto_super_seguro';
+
+// Middleware para proteger endpoints con JWT
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Token requerido' });
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Token inválido' });
+    req.user = user;
+    next();
+  });
+}
+
+app.get('/productos', authenticateToken, async (req, res) => {
   try {
     await sql.connect(dbConfig);
     const result = await sql.query('SELECT * FROM dannywu');
@@ -73,14 +89,41 @@ app.post('/login', async (req, res) => {
   }
   try {
     await sql.connect(dbConfig);
-    const result = await sql.query`SELECT * FROM dannyusuarios WHERE username = ${username} AND password = ${password}`;
-    if (result.recordset.length > 0) {
-      // Login válido
-      res.json({ success: true, user: { id: result.recordset[0].id, username: result.recordset[0].username } });
-    } else {
-      // Login inválido
-      res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
+    const result = await sql.query`SELECT * FROM dannyusuarios WHERE username = ${username}`;
+    if (result.recordset.length === 0) {
+      return res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
     }
+    const user = result.recordset[0];
+    // Comparar hash
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return res.status(401).json({ success: false, message: 'Credenciales incorrectas' });
+    }
+    // Generar JWT
+    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '2h' });
+    res.json({ success: true, user: { id: user.id, username: user.username }, token });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// Endpoint para registrar usuario nuevo
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Faltan credenciales' });
+  }
+  try {
+    await sql.connect(dbConfig);
+    // Verificar si el usuario ya existe
+    const exists = await sql.query`SELECT * FROM dannyusuarios WHERE username = ${username}`;
+    if (exists.recordset.length > 0) {
+      return res.status(409).json({ message: 'El usuario ya existe' });
+    }
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await sql.query`INSERT INTO dannyusuarios (username, password) VALUES (${username}, ${hashedPassword})`;
+    res.json({ success: true, message: 'Usuario registrado correctamente' });
   } catch (err) {
     res.status(500).send(err.message);
   }
