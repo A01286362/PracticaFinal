@@ -27,9 +27,11 @@ jobs:
       - name: Inject VITE_API_SERVER
         run: echo "VITE_API_SERVER=${{ secrets.VITE_API_SERVER }}" > .env
 
+      - name: Clean npm cache
+        run: npm cache clean --force
+
       - name: Install dependencies
         run: npm ci
-        continue-on-error: true
 
       - name: Build Vite project
         run: npm run build
