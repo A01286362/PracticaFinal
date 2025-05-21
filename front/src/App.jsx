@@ -5,14 +5,19 @@ import Users from './components/Users';
 import Products from './components/Products';
 import './App.css';
 
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/" replace />;
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/productos" element={<Products />} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/users" element={<PrivateRoute><Users /></PrivateRoute>} />
+        <Route path="/productos" element={<PrivateRoute><Products /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

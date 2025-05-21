@@ -56,7 +56,10 @@ const Dashboard = () => {
       </List>
       <Divider />
       <List>
-        <ListItem button onClick={() => navigate('/')}>
+        <ListItem button onClick={() => {
+          localStorage.removeItem('token');
+          navigate('/');
+        }}>
           <ListItemIcon><LogoutIcon /></ListItemIcon>
           <ListItemText primary="Cerrar Sesión" />
         </ListItem>
