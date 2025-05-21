@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Inject VITE_API_SERVER
         run: echo "VITE_API_SERVER=${{ secrets.VITE_API_SERVER }}" > .env
