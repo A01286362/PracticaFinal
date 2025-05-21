@@ -4,6 +4,8 @@ const sql = require('mssql');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 const app = express();
 app.use(express.json());
@@ -11,6 +13,9 @@ app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true
 }));
+
+// Swagger UI setup
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const dbConfig = {
   user: process.env.DB_USER,
