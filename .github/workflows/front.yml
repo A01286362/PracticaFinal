@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend
+        working-directory: front
 
     steps:
       - uses: actions/checkout@v3
@@ -35,6 +35,6 @@ jobs:
         uses: azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_TOKEN }}
-          app_location: "frontend"
+          app_location: "front"
           output_location: "dist"
           deployment_action: "upload"
