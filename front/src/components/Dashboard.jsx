@@ -35,7 +35,7 @@ const Dashboard = () => {
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Usuarios', icon: <PeopleIcon />, path: '/users' },
-    { text: 'Configuración', icon: <SettingsIcon />, path: '/settings' },
+    { text: 'Productos', icon: <SettingsIcon />, path: '/productos' },
   ];
 
   const drawer = (
