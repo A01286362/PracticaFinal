@@ -178,4 +178,5 @@ app.delete('/usuarios/:id', authenticateToken, async (req, res) => {
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
+  console.log(`Documentación de la API disponible en: http://localhost:${PORT}/api-docs`);
 }); 
