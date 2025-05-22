@@ -24,8 +24,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Inject VITE_API_SERVER
-        run: echo "VITE_API_SERVER=${{ secrets.VITE_API_SERVER }}" > .env
+      - name: Inject VITE_API_URL
+        run: echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
 
       - name: Clean npm cache
         run: npm cache clean --force
