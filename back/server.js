@@ -10,7 +10,11 @@ const swaggerDocument = require('./swagger.json');
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://witty-river-04a0be710.6.azurestaticapps.net'
+  ],
   credentials: true
 }));
 
