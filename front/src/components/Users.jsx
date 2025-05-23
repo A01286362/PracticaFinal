@@ -4,8 +4,7 @@ import {
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import API_URL from '../config';
 
 function getToken() {
   return localStorage.getItem('token');
