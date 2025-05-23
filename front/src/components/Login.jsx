@@ -34,7 +34,7 @@ const Login = () => {
         setError(data.message || 'Credenciales incorrectas');
       }
     } catch (err) {
-      setError('Error de conexión con el servidor');
+      setError(err.message || 'Error de conexión con el servidor');
     }
   };
 

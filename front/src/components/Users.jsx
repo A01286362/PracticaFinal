@@ -115,16 +115,22 @@ const Users = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.username}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleOpen(user)}><Edit /></IconButton>
-                  <IconButton onClick={() => handleDelete(user.id)}><Delete /></IconButton>
-                </TableCell>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={3} align="center">Cargando...</TableCell>
               </TableRow>
-            ))}
+            ) : (
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.username}</TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleOpen(user)}><Edit /></IconButton>
+                    <IconButton onClick={() => handleDelete(user.id)}><Delete /></IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
