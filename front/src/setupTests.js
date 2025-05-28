@@ -1,3 +1,5 @@
+/* eslint-env jest, node */
+/* global global, jest, process */
 import '@testing-library/jest-dom';
 
 // Polyfill for TextEncoder/TextDecoder
@@ -24,7 +26,10 @@ Object.defineProperty(window, 'localStorage', {
 global.fetch = jest.fn();
 
 // Mock environment variables
-process.env = {
-  ...process.env,
+if (typeof process === 'undefined') {
+  global.process = {};
+}
+global.process.env = {
+  ...global.process.env,
   VITE_API_URL: 'http://localhost:3000'
 };

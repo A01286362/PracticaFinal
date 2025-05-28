@@ -1,3 +1,5 @@
+/* eslint-env jest, node */
+/* global global, jest, process, describe, test, expect, beforeEach */
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
