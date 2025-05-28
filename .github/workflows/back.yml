@@ -37,6 +37,9 @@ jobs:
         run: npm ci
         continue-on-error: true
 
+      - name: Run backend unit tests
+        run: npm test
+
       - name: Lint
         run: npm run lint || echo "Lint failed"
 
